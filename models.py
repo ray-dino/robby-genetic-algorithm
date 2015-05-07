@@ -16,13 +16,15 @@ class DNA(object):
             if np.random.randint(1, settings.MUTATION)==1 
             else gene)
 
-    def splice(dna_object):
-        break_point = randint(0, settings.DNA_LENGTH)
-        child1 = (self._dna_sequence[:break_point]
-            + dna_object.get_sequence()[break_point:])
-        child2 = (dna_object.get_sequence()[:break_point]
-            + self._dna_sequence[break_point:])
-        return child1, child2
+    def splice(self, dna_object):
+        break_point = np.random.randint(0, settings.DNA_LENGTH)
+        child1 = np.concatenate((
+            self._dna_sequence[:break_point],
+            dna_object.get_sequence()[break_point:]))
+        child2 = np.concatenate((
+            dna_object.get_sequence()[:break_point],
+            self._dna_sequence[break_point:]))
+        return DNA(child1), DNA(child2)
 
     def get_sequence(self):
         return self._dna_sequence
@@ -33,8 +35,11 @@ class DNA(object):
 
 class Robby(object):
 
-    def __init__(self, dna):
-        self._dna = dna
+    def __init__(self, dna=None):
+        if dna is None:
+            self._dna = DNA()
+        else:
+            self._dna = dna
         self._fitness = 0
         self._position = {'y': 0, 'x': 0}
         self._actions = {
@@ -48,6 +53,7 @@ class Robby(object):
         }
 
     def mate(self, partner):
+        print "mating.."
         dna1, dna2 = self._dna.splice(partner.get_dna())
         return Robby(dna1), Robby(dna2)
 
@@ -55,6 +61,7 @@ class Robby(object):
         return self._dna
 
     def live(self):
+        print "living.."
         scores = []
         for i in xrange(0, settings.TRIES):
             trial_fitness = 0
@@ -63,9 +70,10 @@ class Robby(object):
             for step in xrange(0, settings.LIFESPAN):
                 scenario = board.get_scenario(**self._position)
                 gene = self._dna.get_gene(scenario)
-                self._actions[gene](board, trial_fitness)
+                trial_fitness = self._actions[gene](board, trial_fitness)
             scores.append(trial_fitness)
-        self._fitness = np.array(scores).mean
+        self._fitness = np.array(scores).mean()
+        print "fitness {}".format(self._fitness)
                     
     def get_fitness(self):
         return self._fitness
@@ -75,6 +83,7 @@ class Robby(object):
             fitness -= settings.CRASH_PENALTY
         else:
             self._position['y'] -= 1
+        return fitness
 
     def _move_east(self, board, fitness):
         y, x = board.get_size()
@@ -82,12 +91,14 @@ class Robby(object):
             fitness -= settings.CRASH_PENALTY
         else:
             self._position['x'] += 1
+        return fitness
 
     def _move_west(self, board, fitness):
         if self._position['x']==0:
             fitness -= settings.CRASH_PENALTY
         else:
             self._position['x'] -= 1
+        return fitness
         
     def _move_south(self, board, fitness):
         y, x = board.get_size()
@@ -95,6 +106,7 @@ class Robby(object):
             fitness -= settings.CRASH_PENALTY
         else:
             self._position['y'] += 1
+        return fitness
 
     def _move_random(self, board, fitness):
         action = np.random.choice([
@@ -103,22 +115,23 @@ class Robby(object):
             self._move_west,
             self._move_south
         ])
-        action(board, fitness)
+        return action(board, fitness)
 
     def _stay_put(self, board, fitness):
-        pass
+        return fitness
 
     def _pick_up(self, board, fitness):
         if board.cleanup_site(**self._position):
             fitness += settings.PICKUP_POINTS
         else:
             fitness -= settings.PICKUP_PENALTY
+        return fitness
 
 
 class Board(object):
     
     def __init__(self):
-        self._board = np.random.rint(np.random.rand(10, 10)).astype(int64)
+        self._board = np.rint(np.random.rand(10, 10)).astype(np.int64)
 
     def get_scenario(self, x, y):
         """Return a base-10 integer that is the equivalent of the 5-digit 
