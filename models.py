@@ -28,5 +28,16 @@ class DNA(object):
 class Robby(object):
     _dna = None
     
-    def __init__(self):
-        pass
+    def __init__(self, dna):
+        self._dna = dna
+
+    def mate(self, partner):
+        dna1, dna2 = self._dna.splice(partner.get_dna())
+        return Robby(dna1), Robby(dna2)
+
+    def get_dna(self):
+        return self._dna
+
+
+class Board(object):
+    pass
