@@ -18,7 +18,7 @@
 *X = An integer setting for lifespan. Default to 200
 *Fitness Score is the sum of the sub-scores per turn.
 10 points for each can Robby successfully picks up.
--1 point for each can Robby fails to pick up.
+-5 if he crashes into a wall.
 -1 point if Robby tries to pick up a can when there isn't one.*
 
 ## Evolution
