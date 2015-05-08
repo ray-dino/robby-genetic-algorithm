@@ -7,12 +7,12 @@ class DNA(object):
     
     def __init__(self, init_sequence=None):
         if init_sequence is None:
-            self._dna_sequence = np.random.randint(0, 6, settings.DNA_LENGTH)
+            self._dna_sequence = np.random.randint(0, 7, settings.DNA_LENGTH)
         else:
             self._dna_sequence = [self._mutate(x) for x in init_sequence]
 
     def _mutate(self, gene):
-        return (np.random.randint(0,6) 
+        return (np.random.randint(0, 7) 
             if np.random.randint(1, settings.MUTATION)==1 
             else gene)
 
