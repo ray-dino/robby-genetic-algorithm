@@ -29,10 +29,14 @@ def get_relative_probabilities(population):
     pop_fitness = [r.get_fitness() for r in population]
     min_fitness = min(pop_fitness)
     max_fitness = max(pop_fitness)
-    normalized = map(lambda x: normalize(x, min_fitness, max_fitness),
-                     pop_fitness)
+    normalized = list(
+        map(
+            lambda x: normalize(x, min_fitness, max_fitness),
+            pop_fitness
+        )
+    )
     total = sum(normalized)
-    return map(lambda x: x/total, normalized)
+    return list(map(lambda x: x/total, normalized))
 
 
 def normalize(x, minf, maxf):
@@ -40,5 +44,5 @@ def normalize(x, minf, maxf):
 
 
 if __name__=='__main__':
-    logging.basicConfig(level=1)
+    logging.basicConfig(level=20)
     evolve()
