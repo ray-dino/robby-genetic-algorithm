@@ -10,6 +10,9 @@ def evolve():
     for gen in range(0, settings.GENERATIONS):
         for individual in population:
             individual.live()
+        logging.info("Generation {}: {}".format(
+            gen,
+            max([r.get_fitness() for r in population])))
         new_population = list()
         while len(new_population)<settings.POPULATION:
             father, mother = np.random.choice(
@@ -20,9 +23,6 @@ def evolve():
             new_population.append(child1)
             new_population.append(child2)
         population = new_population
-        logging.info("Generation {}: {}".format(
-            gen,
-            max([r.get_fitness() for r in population])))
 
 
 def get_relative_probabilities(population):
