@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 
 import settings
@@ -6,7 +7,7 @@ from models import Robby
 
 def evolve():
     population = np.array([Robby() for i in range(0, settings.POPULATION)])
-    for gen in xrange(0, settings.GENERATIONS):
+    for gen in range(0, settings.GENERATIONS):
         for individual in population:
             individual.live()
         new_population = list()
@@ -18,10 +19,10 @@ def evolve():
             child1, child2 = father.mate(mother)
             new_population.append(child1)
             new_population.append(child2)
-            print "pop size {}".format(len(new_population))
         population = new_population
-    print "The highest achieved fitness score is {}".format(
-        max([r.get_fitness() for r in population])) 
+        logging.info("Generation {}: {}".format(
+            gen,
+            max([r.get_fitness() for r in population])))
 
 
 def get_relative_probabilities(population):
@@ -39,4 +40,5 @@ def normalize(x, minf, maxf):
 
 
 if __name__=='__main__':
+    logging.basicConfig(level=1)
     evolve()

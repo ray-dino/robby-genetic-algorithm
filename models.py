@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 
 import settings
@@ -53,7 +54,6 @@ class Robby(object):
         }
 
     def mate(self, partner):
-        print "mating.."
         dna1, dna2 = self._dna.splice(partner.get_dna())
         return Robby(dna1), Robby(dna2)
 
@@ -61,19 +61,18 @@ class Robby(object):
         return self._dna
 
     def live(self):
-        print "living.."
         scores = []
-        for i in xrange(0, settings.TRIES):
+        for i in range(0, settings.TRIES):
             trial_fitness = 0
             board = Board()
             self._position = {'y': 0, 'x': 0}
-            for step in xrange(0, settings.LIFESPAN):
+            for step in range(0, settings.LIFESPAN):
                 scenario = board.get_scenario(**self._position)
                 gene = self._dna.get_gene(scenario)
                 trial_fitness = self._actions[gene](board, trial_fitness)
             scores.append(trial_fitness)
         self._fitness = np.array(scores).mean()
-        print "fitness {}".format(self._fitness)
+        logging.debug("Individual Fitness {}".format(self._fitness))
                     
     def get_fitness(self):
         return self._fitness
