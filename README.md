@@ -11,6 +11,8 @@ python main.py
 
 # Project Outline
 
+A genetic algorithm to create an optimal "Robby": a self-directed robot tasked to pick up cans littered around a 10x10 board.
+
 ## Board
 * A 10x10 matrix where each cell has a 50% of having a can.
 
