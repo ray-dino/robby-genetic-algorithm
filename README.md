@@ -40,3 +40,8 @@ A genetic algorithm to create an optimal "Robby": a self-directed robot tasked t
   * "Mate" the 2 Robbies to create 2 children to add to a new population.
 4. Once the new population is of size P, return to step 2.
 
+# To Do
+
+* Concurrency
+* Save the DNA of the fittest indvidual.
+* Visualization showing a board and a Robby. Accepts input DNA object to determine the Robby's behavior.
