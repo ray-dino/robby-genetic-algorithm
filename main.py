@@ -23,6 +23,18 @@ def evolve():
             new_population.append(child1)
             new_population.append(child2)
         population = new_population
+    alpha = get_alpha(population)
+    return alpha
+
+def get_alpha(population):
+    fittest = None
+    for individual in population:
+        if fittest is None:
+            fittest = individual
+        else:
+            if fittest.get_fitness() < individual.get_fitness():
+                fittest = individual
+    return fittest
 
 
 def get_relative_probabilities(population):
@@ -45,4 +57,5 @@ def normalize(x, minf, maxf):
 
 if __name__=='__main__':
     logging.basicConfig(level=20)
-    evolve()
+    alpha = evolve()
+    logging.info(''.join([str(int(x)) for x in alpha.get_dna().get_sequence()]))
